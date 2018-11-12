@@ -1,12 +1,16 @@
 
-public class Main {
+public class SubstringFinder {
+
+    public static final char JATKA_VALINTA_KYLLA = 'y';
+    public static final char JATKA_VALINTA_EI = 'n';
+    public static final String ERROR_MESSAGE = "Error!";
 
     public static void main(String[] args) {
 
         System.out.println("Hello! I find substrings.\n");
-        boolean jatka = true;
+        boolean jatkaMainLooppia = true;
 
-        while (jatka) {
+        while (jatkaMainLooppia) {
             System.out.println("Please, enter a string: ");
 
             String merkkijono = In.readString();
@@ -30,16 +34,18 @@ public class Main {
 
             System.out.println("Continue y/n? ");
             char j = In.readString().charAt(0);
+            boolean jatka_valinta = true;
+            while (jatka_valinta) {
 
-            while (true) {
+                if (j != JATKA_VALINTA_KYLLA && j != JATKA_VALINTA_EI) {
+                    System.out.println(ERROR_MESSAGE);
+                } else if (j == JATKA_VALINTA_EI) {
 
-                if (j != 'n' && j != 'y') {
-                    System.out.println("Error!");
-                } else if (j == 'n') {
-                    jatka = false;
-                    break;
+                    jatkaMainLooppia = false;
+                    jatka_valinta = false;
                 } else {
-                    break;
+
+                    jatka_valinta = false;
                 }
 
             }
