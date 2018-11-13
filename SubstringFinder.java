@@ -25,7 +25,8 @@ public class SubstringFinder {
                     if (merkkijono.charAt(i) == osamj.charAt(0)) {
                         if (tarkistaMerkkijono(merkkijono, osamj, i)) {
                             tulostaMerkkijono(merkkijono, osamj, i);
-                            break;
+                            i += osamj.length();
+                            System.out.println("");
                         }
                     }
                 }
