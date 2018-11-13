@@ -117,7 +117,8 @@ public class SubstringFinder {
 
             String merkkijonoOsamj = getOsaMerkkijonosta(merkkijono, i, osamj.length(), rajoitus);
 
-            System.out.println(merkkijonoOsamj);
+//            System.out.println(merkkijonoOsamj);
+
 
         }
 
@@ -126,13 +127,18 @@ public class SubstringFinder {
     public static String getOsaMerkkijonosta(String merkkijono, int indeksista, int pituus, int rajoitus) {
         String sana = "";
         if (rajoitus == 1) {
-            for (int i = indeksista; i < indeksista + pituus; i++) {
-                sana += merkkijono.charAt(i);
+            if (indeksista + pituus < merkkijono.length()) {
+                for (int i = indeksista; i < indeksista + pituus; i++) {
+                    sana += merkkijono.charAt(i);
+                }
             }
             return sana;
         } else if (rajoitus == -1) {
-            for (int i = indeksista; i > indeksista + pituus; i--) {
-                sana += merkkijono.charAt(i);
+            if (indeksista - pituus >= 0) {
+                for (int i = indeksista - pituus; i < indeksista; i++) {
+
+                    sana += merkkijono.charAt(i);
+                }
             }
             return sana;
         }
