@@ -16,20 +16,18 @@ public class SubstringFinder {
             String merkkijono = In.readString();
             System.out.println("Please enter a substring: ");
             String osamj = In.readString();
-            int rajoitettu = rajoitettuHaku(osamj);
+            int rajoitus = rajoitettuHaku(osamj);
 
             if (merkkijono.length() >= osamj.length()) {
 
-                if (rajoitettu == 0) {
+                if (rajoitus == 0) {
                     haeSanaa(merkkijono, osamj);
-                } else if (rajoitettu == 1) {
-                    osamj = poistaYlimaarainen(osamj, rajoitettu);
-                    System.out.println(osamj);
+                } else if (rajoitus == 1) {
+                    osamj = poistaYlimaarainen(osamj, rajoitus);
                     haeSanaaAlusta(merkkijono, osamj);
-                } else if (rajoitettu == -1) {
-                    osamj = poistaYlimaarainen(osamj, rajoitettu);
-                    System.out.println(osamj);
-                    haeSanaaLopusta(merkkijono, osamj);
+                } else if (rajoitus == -1) {
+                    osamj = poistaYlimaarainen(osamj, rajoitus);
+                    haeSanaaLopusta(merkkijono, osamj, rajoitus);
                 }
             }
 
@@ -93,21 +91,61 @@ public class SubstringFinder {
     }
 
     public static void haeSanaaAlusta(String merkkijono, String osamj) {
+        boolean jatka = true;
+
+        for (int i = 0; i < merkkijono.length(); i++) {
+
+            if (merkkijono.charAt(i) == osamj.charAt(0) && jatka) {
+
+                if (tarkistaMerkkijono(merkkijono, osamj, i)) {
+
+                    if (i + osamj.length() < merkkijono.length()) {
+
+                        tulostaMerkkijono(merkkijono, osamj, i);
+                        jatka = false;
+                    }
+
+                }
+            }
+        }
+    }
+
+    public static void haeSanaaLopusta(String merkkijono, String osamj, int rajoitus) {
+        boolean jatka = true;
+
+        for (int i = merkkijono.length(); i > 0; i--) {
+
+            String merkkijonoOsamj = getOsaMerkkijonosta(merkkijono, i, osamj.length(), rajoitus);
+
+            System.out.println(merkkijonoOsamj);
+
+        }
 
     }
 
-    public static void haeSanaaLopusta(String merkkijono, String osamj) {
-
-    }
-
-    public static String poistaYlimaarainen(String osamj, int suunta) {
+    public static String getOsaMerkkijonosta(String merkkijono, int indeksista, int pituus, int rajoitus) {
         String sana = "";
-        System.out.println("suunta " + suunta);
-        if (suunta == 1) {
+        if (rajoitus == 1) {
+            for (int i = indeksista; i < indeksista + pituus; i++) {
+                sana += merkkijono.charAt(i);
+            }
+            return sana;
+        } else if (rajoitus == -1) {
+            for (int i = indeksista; i > indeksista + pituus; i--) {
+                sana += merkkijono.charAt(i);
+            }
+            return sana;
+        }
+        return merkkijono;
+    }
+
+    public static String poistaYlimaarainen(String osamj, int rajoitus) {
+        String sana = "";
+        if (rajoitus == 1) {
             for (int i = 1; i < osamj.length(); i++) {
                 sana += osamj.charAt(i);
             }
-        } else if (suunta == -1) {
+        } else if (rajoitus == -1) {
             for (int i = 0; i < osamj.length() - 1; i++) {
                 sana += osamj.charAt(i);
             }
