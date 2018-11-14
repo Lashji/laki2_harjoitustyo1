@@ -1,6 +1,6 @@
 
 public class SubstringFinder {
-
+//    Vakiomuuttujat
     public static final char JATKA_VALINTA_KYLLA = 'y';
     public static final char JATKA_VALINTA_EI = 'n';
     public static final String ERROR_MESSAGE = "Error!";
@@ -9,6 +9,7 @@ public class SubstringFinder {
 
         System.out.println("Hello! I find substrings.\n");
         boolean jatkaMainLooppia = true;
+
 
         while (jatkaMainLooppia) {
 
@@ -21,10 +22,10 @@ public class SubstringFinder {
             if (merkkijono.length() >= osamj.length()) {
 
                 if (rajoitus == 0) {
-                    haeSanaa(merkkijono, osamj);
+                    haeSanaa(merkkijono, osamj, rajoitus);
                 } else if (rajoitus == 1) {
                     osamj = poistaYlimaarainen(osamj, rajoitus);
-                    haeSanaaAlusta(merkkijono, osamj);
+                    haeSanaa(merkkijono, osamj, rajoitus);
                 } else if (rajoitus == -1) {
                     osamj = poistaYlimaarainen(osamj, rajoitus);
                     haeSanaaLopusta(merkkijono, osamj, rajoitus);
@@ -37,15 +38,8 @@ public class SubstringFinder {
         System.out.println("See you soon.");
     }
 
-    static boolean tarkistaMerkkijono(String mj, String osa, int start) {
-        for (int i = start; i < osa.length(); i++) {
-            if (mj.charAt(i) != osa.charAt(i)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
+//    Tulostaa merkkijonon
     static void tulostaMerkkijono(String mj, String osamj, int loytynyt_indeksi) {
         for (int i = 0; i <= mj.length(); i++) {
             if (i < loytynyt_indeksi) {
@@ -60,6 +54,10 @@ public class SubstringFinder {
         System.out.println("");
     }
 
+    /*
+            Määrittelee haluaako käyttäjä rajoitetun haun. Palauttaa int arvon käyttäjän valinnan mukaan
+            0 = ei rajattu, 1 = haetaan alusta, -1= haetaan lopusta
+    */
     public static int rajoitettuHaku(String osamj) {
 
         if (osamj.charAt(0) == '*') {
@@ -71,38 +69,28 @@ public class SubstringFinder {
         return 0;
     }
 
-    public static void haeSanaa(String merkkijono, String osamj) {
-        for (int i = 0; i < merkkijono.length(); i++) {
-
-            if (merkkijono.charAt(i) == osamj.charAt(0)) {
-
-                if (tarkistaMerkkijono(merkkijono, osamj, i)) {
-
-                    if (i + osamj.length() < merkkijono.length()) {
-
-                        tulostaMerkkijono(merkkijono, osamj, i);
-                        System.out.println("");
-
-                    }
-
-                }
-            }
-        }
-    }
-
-    public static void haeSanaaAlusta(String merkkijono, String osamj) {
+    //    Hakee sanaa Stringin alusta päin
+    public static void haeSanaa(String merkkijono, String osamj, int rajoitus) {
         boolean jatka = true;
 
         for (int i = 0; i < merkkijono.length(); i++) {
 
-            if (merkkijono.charAt(i) == osamj.charAt(0) && jatka) {
+            if (jatka) {
 
-                if (tarkistaMerkkijono(merkkijono, osamj, i)) {
+                String merkkijonoOsamj = getOsaMerkkijonosta(merkkijono, i, osamj.length(), rajoitus);
 
-                    if (i + osamj.length() < merkkijono.length()) {
+                if (i + osamj.length() <= merkkijono.length() && jatka) {
 
+                    if (merkkijonoOsamj.equals(osamj)) {
                         tulostaMerkkijono(merkkijono, osamj, i);
-                        jatka = false;
+
+                        if (rajoitus == 1 || rajoitus == -1) {
+                            jatka = false;
+                        } else {
+                            System.out.println("");
+                        }
+
+
                     }
 
                 }
@@ -110,24 +98,29 @@ public class SubstringFinder {
         }
     }
 
+    //    Suorittaa rajatun haun Stringin lopusta päin
     public static void haeSanaaLopusta(String merkkijono, String osamj, int rajoitus) {
         boolean jatka = true;
 
         for (int i = merkkijono.length(); i > 0; i--) {
 
             String merkkijonoOsamj = getOsaMerkkijonosta(merkkijono, i, osamj.length(), rajoitus);
+            if (i + osamj.length() <= merkkijono.length()) {
 
-//            System.out.println(merkkijonoOsamj);
+                if (merkkijonoOsamj.equals(osamj)) {
+                    tulostaMerkkijono(merkkijono, osamj, i);
+                }
 
-
+            }
         }
 
     }
 
+    //   Hakee merkkijonosta osan ja palauttaa sen vertailua varten
     public static String getOsaMerkkijonosta(String merkkijono, int indeksista, int pituus, int rajoitus) {
         String sana = "";
-        if (rajoitus == 1) {
-            if (indeksista + pituus < merkkijono.length()) {
+        if (rajoitus == 1 || rajoitus == 0) {
+            if (indeksista + pituus <= merkkijono.length()) {
                 for (int i = indeksista; i < indeksista + pituus; i++) {
                     sana += merkkijono.charAt(i);
                 }
@@ -145,6 +138,7 @@ public class SubstringFinder {
         return merkkijono;
     }
 
+    //    Poistaa tähden merkkijonosta ja palauttaa uuden Stringin
     public static String poistaYlimaarainen(String osamj, int rajoitus) {
         String sana = "";
         if (rajoitus == 1) {
@@ -159,13 +153,15 @@ public class SubstringFinder {
         return sana;
     }
 
+    //    Kysyy käyttäjältä haluaako käyttäjä jatkaa ja palauttaa totuusarvon
     public static boolean suoritetaankoOhjelmaUudelleen() {
 
-        System.out.println("Continue y/n? ");
-        char j = In.readString().charAt(0);
         boolean jatka_valinta = true;
 
         while (jatka_valinta) {
+            System.out.println("Continue y/n? ");
+            char j = In.readString().charAt(0);
+
             if (j != JATKA_VALINTA_KYLLA && j != JATKA_VALINTA_EI) {
                 System.out.println(ERROR_MESSAGE);
             } else if (j == JATKA_VALINTA_EI) {
